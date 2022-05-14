@@ -7,35 +7,23 @@
 #include <windows.h> 
 
 
-struct member{
+struct member
+{
  char name[50];
  char id[50];
  char phoneNumber[50];
  char date[50];
 };
 
-void takeInput(char str[50]){
+void takeInput(char str[50])
+{
   fgets(str,50,stdin);
   str[strlen(str)-0];
 }
 
-
-int main() {
-  int choice;
-  struct member member;
-  FILE *fp;
-
-  printf("\t\tMain Menu\n\n\n");
-  printf("\t\t<1>\tAdd Members\n\n");
-  printf("\t\t<2>\tRemove Members\n\n");
-  printf("\t\t<3>\tSee Members\n\n");
-  printf("\t\tEnter your choice: ");
-  scanf("%d",&choice);
-  fgetc(stdin);
-
-  switch (choice)
+void addMember(FILE *fp) 
 {
-  case 1:
+  struct member member;
   printf("\t\tAdd the client's name:\t");
   takeInput(member.name);
   printf("\t\tAdd the client's id:\t");
@@ -46,14 +34,42 @@ int main() {
   takeInput(member.phoneNumber);
   fp = fopen("Members.dat","ab");
   fwrite(&member,sizeof(struct member),1,fp);
-  if(fwrite != 0 ) printf("\n\t\tSuccess!,%shas been registerd.",member.name);
-  else {
+if(fwrite != 0 ) printf("\t\tSuccess!,%shas been registerd.",member.name);
+else
+{
   printf("Something went wrong, Try again letter.");
   fclose(fp);
-  }
-  break;
+}
+}
 
-  case 3:
+void deleteMember(FILE *fp)
+{
+  struct member usr;
+  int memberFound = 0;
+  char id[50];
+
+  printf("\t\tEnter an ID:\n\t\t");
+  takeInput(id);
+  fp = fopen("Members.dat","rb");
+while (fread(&usr,sizeof(struct member),1,fp))
+{
+if (!strcmp(usr.id,id))
+{
+  memberFound = 1;
+  printf("\t\t----------------------------------------- \n");
+  printf("\t\tMember Found\n\n");
+  printf("\t\tClient's ID:%s\n",usr.id);
+  printf("\t\tClient's name:\t%s\n",usr.name);
+  printf("\t\tClient's phone number:\t%s\n",usr.phoneNumber);
+  printf("\t\tMember since:\t%s\n",usr.date);
+}
+if (!memberFound) 
+  printf("\t\tMember not Found\n");   
+}
+}
+
+void viewMembers(FILE *fp) 
+{
   struct member client;
   fp = fopen("Members.dat","rb");
   while (fread(&client,sizeof(struct member),1,fp))
@@ -65,10 +81,40 @@ int main() {
   printf("\t\tMember since:\t%s\n",client.date);
   }
    fclose(fp);
+}
+
+
+int main() 
+{
+  int choice;
+  FILE *fp;
+
+  printf("\t\tMain Menu\n\n\n");
+  printf("\t\t<1>\tAdd Members\n\n");
+  printf("\t\t<2>\tRemove Members\n\n");
+  printf("\t\t<3>\tSee Members\n\n");
+  printf("\t\tEnter your choice: ");
+  scanf("%d",&choice);
+  fgetc(stdin);
+
+switch (choice)
+{
+  case 1:
+  system("cls");
+  addMember(fp);
+  break;
+
+  case 2:
+  system("cls");
+  deleteMember(fp);
+  break;
+
+  case 3:
+  system("cls");
+  viewMembers(fp);
   break;
   default:
   break;
 }
-
  return 0;
 }
