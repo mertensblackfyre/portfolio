@@ -138,7 +138,7 @@ int main()
   printf("\t\t<2>\tRemove Members\n\n");
   printf("\t\t<3>\tView Members\n\n");
    printf("\t\t<4>\tSearch Member by ID\n\n");
-  printf("\t\tEnter your choice: ");
+  printf("\t\tEnter your choice:");
   scanf("%d",&choice);
   fgetc(stdin);
 
@@ -164,7 +164,7 @@ switch (choice)
   searchMember(fp);
 
   default:
-  printf("\t\t\nNot a valid Choice:\n");
+  printf("\n\t\tNOT A VALID CHOICE.");
   break;
 }
  return 0;
