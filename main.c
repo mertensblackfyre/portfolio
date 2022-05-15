@@ -15,6 +15,7 @@ struct member
  char date[50];
 };
 
+
 void takeInput(char str[50])
 {
   fgets(str,50,stdin);
@@ -57,7 +58,6 @@ void deleteMember(FILE *fp)
 
 while (fread(&usr,sizeof(struct member),1,fp))
 {
-
 if (!strcmp(usr.id,id)){
   memberFound = 1;
   printf("\t\t----------------------------------------- \n");
@@ -109,10 +109,6 @@ while (fread(&usr,sizeof(struct member),1,fp))
 if (!strcmp(usr.id,id))
 {
   memberFound = 1;
-}
-}
-if (memberFound)
-{
   printf("\t\t----------------------------------------- \n");
   printf("\t\tMember Found\n\n");
   printf("\t\tClient's ID:%s\n",usr.id);
@@ -120,24 +116,60 @@ if (memberFound)
   printf("\t\tClient's phone number:\t%s\n",usr.phoneNumber);
   printf("\t\tMember since:\t%s\n",usr.date);
 }
-else
-{
-  printf("\t\tMember not Found\n"); 
-}    
+else printf("\t\tMember not Found\n"); 
+}
   fclose(fp);
+}
+
+void updateMember(FILE *fp)
+{
+  FILE *fp_tmp;
+  struct member usr;
+  int memberFound = 0;
+  char id[50];
+  char choice;
+
+  printf("\t\tEnter an ID:\n\t\t");
+  takeInput(id);
+  fp = fopen("Members.dat","rb");
+  fp_tmp = fopen("tmp.bin", "wb");
+
+while (fread(&usr,sizeof(struct member),1,fp))
+{
+if (!strcmp(usr.id,id)){
+  memberFound = 1;
+  printf("\t\t----------------------------------------- \n");
+  printf("\t\tMember have been found and deleted.\n\n");
+  printf("\t\tClient's ID:\t%s\n",usr.id);
+  printf("\t\tClient's name:\t%s\n",usr.name);
+  printf("\t\tMember since:\t%s\n",usr.date);
+} 
+else 
+  fwrite(&usr, sizeof(struct member), 1, fp_tmp);
+}
+
+if (!memberFound) 
+  printf("\t\tMember not Found\n");
+
+
+  fclose(fp);
+  fclose(fp_tmp);
+	remove("Members.dat");
+	rename("tmp.bin", "Members.dat"); 
 }
 
 
 int main() 
 {
+  FILE *fp; 
   int choice;
-  FILE *fp;
-
   printf("\t\tMain Menu\n\n\n");
-  printf("\t\t<1>\tAdd Members\n\n");
-  printf("\t\t<2>\tRemove Members\n\n");
-  printf("\t\t<3>\tView Members\n\n");
-   printf("\t\t<4>\tSearch Member by ID\n\n");
+  printf("\t\t<1>\tAdd a Member\n\n");
+  printf("\t\t<2>\tRemove a Member\n\n");
+  printf("\t\t<3>\tView all Members\n\n");
+  printf("\t\t<4>\tSearch Member by ID\n\n");
+  printf("\t\t<5>\tUpdate a Member\n\n");
+  printf("\t\t<6>\tClose Application\n\n");
   printf("\t\tEnter your choice:");
   scanf("%d",&choice);
   fgetc(stdin);
@@ -162,6 +194,16 @@ switch (choice)
   case 4:
   system("cls");
   searchMember(fp);
+  break;
+
+  case 5:
+  system("cls");
+  updateMember(fp);
+  break;
+
+  case 6:
+  exit(1);
+  break;
 
   default:
   printf("\n\t\tNOT A VALID CHOICE.");
