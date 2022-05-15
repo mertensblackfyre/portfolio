@@ -87,7 +87,7 @@ void viewMembers(FILE *fp)
   while (fread(&client,sizeof(struct member),1,fp))
   {
   printf("\t\t----------------------------------------- \n");
-  printf("\t\tClient's ID:%s\n",client.id);
+  printf("\t\tClient's ID:\t%s\n",client.id);
   printf("\t\tClient's name:\t%s\n",client.name);
   printf("\t\tClient's phone number:\t%s\n",client.phoneNumber);
   printf("\t\tMember since:\t%s\n",client.date);
@@ -136,20 +136,28 @@ void updateMember(FILE *fp)
 
 while (fread(&usr,sizeof(struct member),1,fp))
 {
-if (!strcmp(usr.id,id)){
-  memberFound = 1;
-  printf("\t\t----------------------------------------- \n");
-  printf("\t\tMember have been found and deleted.\n\n");
-  printf("\t\tClient's ID:\t%s\n",usr.id);
-  printf("\t\tClient's name:\t%s\n",usr.name);
-  printf("\t\tMember since:\t%s\n",usr.date);
-} 
+if (!strcmp(usr.id,id)) memberFound = 1;
 else 
   fwrite(&usr, sizeof(struct member), 1, fp_tmp);
 }
 
+if (memberFound)
+{
+  printf("\t\tClient's id:%s\t",id);
+  printf("\t\tNew client's name:\t");
+  takeInput(usr.name);
+  printf("\t\tData issued:\t");
+  takeInput(usr.date);
+  printf("\t\tNew client's phone number:\t");
+  takeInput(usr.phoneNumber);
+   fp_tmp = fopen("tmp.bin", "ab");
+  fwrite(&usr,sizeof(struct member),1, fp_tmp);
+}
+
+
 if (!memberFound) 
   printf("\t\tMember not Found\n");
+
 
 
   fclose(fp);
