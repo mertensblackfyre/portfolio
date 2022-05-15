@@ -18,7 +18,7 @@ struct member
 void takeInput(char str[50])
 {
   fgets(str,50,stdin);
-  str[strlen(str)-0];
+  str[strlen(str) - 0];
 }
 
 void addMember(FILE *fp) 
@@ -43,6 +43,59 @@ else
 }
 
 void deleteMember(FILE *fp)
+{
+  FILE *fp_tmp;
+  struct member usr;
+  int memberFound = 0;
+  char id[50];
+  char choice;
+
+  printf("\t\tEnter an ID:\n\t\t");
+  takeInput(id);
+  fp = fopen("Members.dat","rb");
+  fp_tmp=fopen("tmp.bin", "wb");
+
+while (fread(&usr,sizeof(struct member),1,fp))
+{
+
+if (!strcmp(usr.id,id)){
+  memberFound = 1;
+  printf("\t\t----------------------------------------- \n");
+  printf("\t\tMember have been found and deleted.\n\n");
+  printf("\t\tClient's ID:\t%s\n",usr.id);
+  printf("\t\tClient's name:\t%s\n",usr.name);
+  printf("\t\tMember since:\t%s\n",usr.date);
+} 
+
+else fwrite(&usr, sizeof(struct member), 1, fp_tmp);
+ 
+}
+
+if (!memberFound) printf("\t\tMember not Found\n");
+
+  fclose(fp);
+  fclose(fp_tmp);
+	remove("Members.dat");
+	rename("tmp.bin", "Members.dat");   
+}
+
+void viewMembers(FILE *fp) 
+{
+  struct member client;
+  fp = fopen("Members.dat","rb");
+
+  while (fread(&client,sizeof(struct member),1,fp))
+  {
+  printf("\t\t----------------------------------------- \n");
+  printf("\t\tClient's ID:%s\n",client.id);
+  printf("\t\tClient's name:\t%s\n",client.name);
+  printf("\t\tClient's phone number:\t%s\n",client.phoneNumber);
+  printf("\t\tMember since:\t%s\n",client.date);
+  }
+   fclose(fp);
+}
+
+void searchMember(FILE *fp)
 {
   struct member usr;
   int memberFound = 0;
@@ -71,21 +124,7 @@ else
 {
   printf("\t\tMember not Found\n"); 
 }    
-}
-
-void viewMembers(FILE *fp) 
-{
-  struct member client;
-  fp = fopen("Members.dat","rb");
-  while (fread(&client,sizeof(struct member),1,fp))
-  {
-  printf("\t\t----------------------------------------- \n");
-  printf("\t\tClient's ID:%s\n",client.id);
-  printf("\t\tClient's name:\t%s\n",client.name);
-  printf("\t\tClient's phone number:\t%s\n",client.phoneNumber);
-  printf("\t\tMember since:\t%s\n",client.date);
-  }
-   fclose(fp);
+  fclose(fp);
 }
 
 
@@ -97,7 +136,8 @@ int main()
   printf("\t\tMain Menu\n\n\n");
   printf("\t\t<1>\tAdd Members\n\n");
   printf("\t\t<2>\tRemove Members\n\n");
-  printf("\t\t<3>\tSee Members\n\n");
+  printf("\t\t<3>\tView Members\n\n");
+   printf("\t\t<4>\tSearch Member by ID\n\n");
   printf("\t\tEnter your choice: ");
   scanf("%d",&choice);
   fgetc(stdin);
@@ -118,7 +158,13 @@ switch (choice)
   system("cls");
   viewMembers(fp);
   break;
+  
+  case 4:
+  system("cls");
+  searchMember(fp);
+
   default:
+  printf("\t\t\nNot a valid Choice:\n");
   break;
 }
  return 0;
