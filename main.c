@@ -39,7 +39,7 @@ else
 {
   printf("Something went wrong, Try again letter.");
   fclose(fp);
-}
+ }
 }
 
 void deleteMember(FILE *fp)
@@ -56,6 +56,10 @@ while (fread(&usr,sizeof(struct member),1,fp))
 if (!strcmp(usr.id,id))
 {
   memberFound = 1;
+}
+}
+if (memberFound)
+{
   printf("\t\t----------------------------------------- \n");
   printf("\t\tMember Found\n\n");
   printf("\t\tClient's ID:%s\n",usr.id);
@@ -63,9 +67,10 @@ if (!strcmp(usr.id,id))
   printf("\t\tClient's phone number:\t%s\n",usr.phoneNumber);
   printf("\t\tMember since:\t%s\n",usr.date);
 }
-if (!memberFound) 
-  printf("\t\tMember not Found\n");   
-}
+else
+{
+  printf("\t\tMember not Found\n"); 
+}    
 }
 
 void viewMembers(FILE *fp) 
