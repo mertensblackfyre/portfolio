@@ -58,17 +58,21 @@ void deleteMember(FILE *fp)
 
 while (fread(&usr,sizeof(struct member),1,fp))
 {
-if (!strcmp(usr.id,id)){
+
+if (!strcmp(usr.id,id)) 
+{
   memberFound = 1;
   printf("\t\t----------------------------------------- \n");
-  printf("\t\tMember have been found and deleted.\n\n");
+  printf("\t\tMember have been found\n\n");
   printf("\t\tClient's ID:\t%s\n",usr.id);
   printf("\t\tClient's name:\t%s\n",usr.name);
-  printf("\t\tMember since:\t%s\n",usr.date);
+  printf("\t\tMember since:\t%s\n\n\n",usr.date);
+  printf("\t\tAre you sure you want to delete this record?(Y/N): ");
+  scanf("%c",&choice);
 } 
+// if (choice == 'Y' && strcmp(usr.id,id)) fwrite(&usr, sizeof(struct member), 1, fp_tmp);  
 
-else fwrite(&usr, sizeof(struct member), 1, fp_tmp);
- 
+else fwrite(&usr, sizeof(struct member), 1, fp_tmp);   
 }
 
 if (!memberFound) printf("\t\tMember not Found\n");
@@ -82,6 +86,7 @@ if (!memberFound) printf("\t\tMember not Found\n");
 void viewMembers(FILE *fp) 
 {
   struct member client;
+  char choice;
   fp = fopen("Members.dat","rb");
 
   while (fread(&client,sizeof(struct member),1,fp))
@@ -93,6 +98,11 @@ void viewMembers(FILE *fp)
   printf("\t\tMember since:\t%s\n",client.date);
   }
    fclose(fp);
+   
+   printf("\t\tDo you want go back to main menu?(Y/N):");
+   scanf("%c",&choice);
+
+   if (choice == 'Y') main();
 }
 
 void searchMember(FILE *fp)
@@ -100,6 +110,7 @@ void searchMember(FILE *fp)
   struct member usr;
   int memberFound = 0;
   char id[50];
+  char choice;
 
   printf("\t\tEnter an ID:\n\t\t");
   takeInput(id);
@@ -116,15 +127,22 @@ if (!strcmp(usr.id,id))
   printf("\t\tClient's phone number:\t%s\n",usr.phoneNumber);
   printf("\t\tMember since:\t%s\n",usr.date);
 }
-else printf("\t\tMember not Found\n"); 
 }
+if(!memberFound) printf("\t\tMember not Found\n"); 
+
   fclose(fp);
+   printf("\t\tDo you want go back to main menu?(Y/N): ");
+   scanf("%c",&choice);
+
+   if (choice == 'Y') main();
 }
 
 void updateMember(FILE *fp)
 {
   FILE *fp_tmp;
   struct member usr;
+  struct member* aPointer;
+  aPointer = malloc(sizeof(struct member));
   int memberFound = 0;
   char id[50];
   char choice;
@@ -137,12 +155,17 @@ void updateMember(FILE *fp)
 while (fread(&usr,sizeof(struct member),1,fp))
 {
 if (!strcmp(usr.id,id)) memberFound = 1;
-else 
+
+else
+{
   fwrite(&usr, sizeof(struct member), 1, fp_tmp);
 }
+}
+  fclose(fp_tmp);
 
 if (memberFound)
 {
+  printf("\t\t\t\t%s",id);
   printf("\t\tClient's id:%s\t",id);
   printf("\t\tNew client's name:\t");
   takeInput(usr.name);
@@ -150,25 +173,27 @@ if (memberFound)
   takeInput(usr.date);
   printf("\t\tNew client's phone number:\t");
   takeInput(usr.phoneNumber);
-   fp_tmp = fopen("tmp.bin", "ab");
+  fp_tmp = fopen("tmp.bin", "ab+");
   fwrite(&usr,sizeof(struct member),1, fp_tmp);
 }
-
 
 if (!memberFound) 
   printf("\t\tMember not Found\n");
 
-
-
   fclose(fp);
   fclose(fp_tmp);
 	remove("Members.dat");
-	rename("tmp.bin", "Members.dat"); 
-}
+	rename("tmp.bin", "Members.dat");
 
+  printf("\t\tDo you want go back to main menu?(Y/N):\n");
+  scanf("%c",&choice);
+
+  if (choice == 'Y') main(); 
+}
 
 int main() 
 {
+  system("cls");
   FILE *fp; 
   int choice;
   printf("\t\tMain Menu\n\n\n");
