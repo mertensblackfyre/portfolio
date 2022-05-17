@@ -15,6 +15,19 @@ struct member
  char date[50];
 };
 
+void mainMenu()
+{
+  system("cls");
+  printf("\t\tMain Menu\n\n\n");
+  printf("\t\t<1>\tAdd a Member\n\n");
+  printf("\t\t<2>\tRemove a Member\n\n");
+  printf("\t\t<3>\tView all Members\n\n");
+  printf("\t\t<4>\tSearch Member by ID\n\n");
+  printf("\t\t<5>\tUpdate a Member\n\n");
+  printf("\t\t<6>\tClose Application\n\n");
+  printf("\t\tEnter your choice:");
+}
+
 
 void takeInput(char str[50])
 {
@@ -24,6 +37,7 @@ void takeInput(char str[50])
 
 void addMember(FILE *fp) 
 {
+  char choice;
   struct member member;
   printf("\t\tAdd the client's name:\t");
   takeInput(member.name);
@@ -41,6 +55,16 @@ else
   printf("Something went wrong, Try again letter.");
   fclose(fp);
  }
+
+ printf("\t\tDo you want go back to main menu?(Y/N):");
+   scanf("%c",&choice);
+
+     
+  if (choice == 'y')
+  {
+    mainMenu();
+  }
+
 }
 
 void deleteMember(FILE *fp)
@@ -102,7 +126,11 @@ void viewMembers(FILE *fp)
    printf("\t\tDo you want go back to main menu?(Y/N):");
    scanf("%c",&choice);
 
-   if (choice == 'Y') main();
+     
+  if (choice == 'y')
+  {
+    mainMenu();
+  }
 }
 
 void searchMember(FILE *fp)
@@ -131,18 +159,21 @@ if (!strcmp(usr.id,id))
 if(!memberFound) printf("\t\tMember not Found\n"); 
 
   fclose(fp);
-   printf("\t\tDo you want go back to main menu?(Y/N): ");
-   scanf("%c",&choice);
+  printf("\t\tDo you want go back to main menu?(Y/N): ");
+  scanf("%c",&choice);
 
-   if (choice == 'Y') main();
+     
+  if (choice == 'y')
+  {
+    mainMenu();
+  }
+
 }
 
 void updateMember(FILE *fp)
 {
   FILE *fp_tmp;
   struct member usr;
-  struct member* aPointer;
-  aPointer = malloc(sizeof(struct member));
   int memberFound = 0;
   char id[50];
   char choice;
@@ -162,11 +193,10 @@ else
 }
 }
   fclose(fp_tmp);
-
 if (memberFound)
 {
-  printf("\t\t\t\t%s",id);
-  printf("\t\tClient's id:%s\t",id);
+  strcpy(usr.id,id);
+  printf("\t\tClient's id:%s\t",usr.id);
   printf("\t\tNew client's name:\t");
   takeInput(usr.name);
   printf("\t\tData issued:\t");
@@ -187,8 +217,12 @@ if (!memberFound)
 
   printf("\t\tDo you want go back to main menu?(Y/N):\n");
   scanf("%c",&choice);
-
-  if (choice == 'Y') main(); 
+  
+  if (choice == 'y')
+  {
+    mainMenu();
+  }
+  
 }
 
 int main() 
@@ -196,14 +230,7 @@ int main()
   system("cls");
   FILE *fp; 
   int choice;
-  printf("\t\tMain Menu\n\n\n");
-  printf("\t\t<1>\tAdd a Member\n\n");
-  printf("\t\t<2>\tRemove a Member\n\n");
-  printf("\t\t<3>\tView all Members\n\n");
-  printf("\t\t<4>\tSearch Member by ID\n\n");
-  printf("\t\t<5>\tUpdate a Member\n\n");
-  printf("\t\t<6>\tClose Application\n\n");
-  printf("\t\tEnter your choice:");
+  mainMenu();
   scanf("%d",&choice);
   fgetc(stdin);
 
