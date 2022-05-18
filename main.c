@@ -134,8 +134,8 @@ void viewMembers(FILE *fp)
    {
      printf("\t\tNo members are found. Please add a member.\n");
    }
-   fclose(fp);
    
+  fclose(fp);
    
    printf("\t\tDo you want go back to main menu?(Y/N): ");
    scanf("%c",&choice);
