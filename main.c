@@ -5,6 +5,7 @@
 #include <conio.h>
 #include <time.h>
 #include <windows.h> 
+#include <assert.h>
 
 
 struct member
@@ -14,6 +15,13 @@ struct member
  char phoneNumber[50];
  char date[50];
 };
+
+void setTime() 
+{
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    printf("\t\t%s\n\n", asctime(tm));
+}
 
 
 void takeInput(char str[50])
@@ -270,6 +278,7 @@ int main()
 
   printf("\t\t\t\tMain Menu\n");
   printf("\t\t\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\n\n");
+  setTime();
   printf("\t\t<1>\tAdd a Member\n\n");
   printf("\t\t<2>\tRemove a Member\n\n");
   printf("\t\t<3>\tView all Members\n\n");
