@@ -36,11 +36,15 @@ void addMember(FILE *fp)
   int taken = 0;
   struct member member;
   struct member usr;
+  time_t t = time(NULL);
+  struct tm *tm = localtime(&t);
+
   fp = fopen("Members.dat","ab");
 
   printf("\t\tAdd the client's new id: ");
   takeInput(member.id);
   fclose(fp);
+  
 
 
  fp = fopen("Members.dat","rb");
@@ -61,8 +65,9 @@ if (!taken && fwrite != 0 )
   takeInput(member.name);
   printf("\t\tAdd the client's phone number: ");
   takeInput(member.phoneNumber);
-  printf("\t\tData issued: ");
-  takeInput(member.date);
+  printf("\t\tData issued: %s",asctime(tm));
+  strcpy(member.date,asctime(tm));
+  
   fwrite(&member,sizeof(struct member),1,fp);
   printf("\t\tSuccess %s has been registerd\n",member.name);
 }
@@ -79,7 +84,8 @@ else
   {
     main();
   }
-
+  
+   fclose(fp);
 }
 
 void deleteMember(FILE *fp)
