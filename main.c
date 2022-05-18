@@ -25,37 +25,52 @@ void takeInput(char str[50])
 void addMember(FILE *fp) 
 {
   char choice;
+  int taken = 0;
   struct member member;
+  struct member usr;
+  fp = fopen("Members.dat","ab");
+
+  printf("\t\tAdd the client's new id: ");
+  takeInput(member.id);
+  fclose(fp);
+
+
+ fp = fopen("Members.dat","rb");
+while (fread(&usr,sizeof(struct member),1,fp))
+{
+if (!strcmp(member.id,usr.id))
+{
+    printf("\t\tId taken by a different is member,use a different ID.\n\n");
+    taken = 1;
+};
+  fclose(fp);
+}
+
+if (!taken && fwrite != 0 )
+{
+  fp = fopen("Members.dat","ab");
   printf("\t\tAdd the client's name: ");
   takeInput(member.name);
-  printf("\t\tAdd the client's id: ");
-  takeInput(member.id);
-  printf("\t\tData issued: ");
-  takeInput(member.date);
   printf("\t\tAdd the client's phone number: ");
   takeInput(member.phoneNumber);
-  fp = fopen("Members.dat","ab");
+  printf("\t\tData issued: ");
+  takeInput(member.date);
   fwrite(&member,sizeof(struct member),1,fp);
-
-if(fwrite != 0 ) 
- printf("\t\tSuccess!,%shas been registerd\n",member.name);
-
+  printf("\t\tSuccess %s has been registerd\n",member.name);
+}
 else
 {
-  printf("Something went wrong, Try again later.");
+  printf("\t\tSomething went wrong, Try again later.\n");
   fclose(fp);
 }
 
  printf("\t\tDo you want go back to main menu?(Y/N): ");
  scanf("%c",&choice);
-
-     
+  
   if (choice == 'y' || choice == 'Y')
   {
     main();
   }
-
-  fclose(fp);
 
 }
 
@@ -84,10 +99,8 @@ if (!strcmp(usr.id,id))
   printf("\t\tClient's name: %s\n",usr.name);
   printf("\t\tClient's contact number: %s\n",usr.phoneNumber);
   printf("\t\tMember since: %s\n\n\n",usr.date);
-  printf("\t\tAre you sure you want to delete this record?(Y/N): ");
-  scanf("%c",&choice);
+  printf("\t\tRecord have been deleted");
 } 
-// if (choice == 'Y' && strcmp(usr.id,id)) fwrite(&usr, sizeof(struct member), 1, fp_tmp);  
 
 else fwrite(&usr, sizeof(struct member), 1, fp_tmp);   
 }
@@ -104,17 +117,25 @@ void viewMembers(FILE *fp)
 {
   struct member client;
   char choice;
+  int memberFound = 0;
   fp = fopen("Members.dat","rb");
 
   while (fread(&client,sizeof(struct member),1,fp))
   {
+  memberFound = 1;
   printf("\t\t----------------------------------------- \n");
   printf("\t\tClient's ID:\t%s\n",client.id);
   printf("\t\tClient's name:\t%s\n",client.name);
   printf("\t\tClient's phone number:\t%s\n",client.phoneNumber);
   printf("\t\tMember since:\t%s\n",client.date);
   }
+
+   if (!memberFound )
+   {
+     printf("\t\tNo members are found. Please add a member.\n");
+   }
    fclose(fp);
+   
    
    printf("\t\tDo you want go back to main menu?(Y/N): ");
    scanf("%c",&choice);
@@ -210,7 +231,6 @@ if (choice2 == 'y' || choice2 == 'Y')
   takeInput(usr.phoneNumber);
   fp_tmp = fopen("tmp.bin", "ab+");
   fwrite(&usr,sizeof(struct member),1, fp_tmp);
-}
 
   printf("\t\t---------------- New Record --------------- \n\n");
   printf("\t\tClient's id: %s\n",usr.id);
@@ -218,6 +238,9 @@ if (choice2 == 'y' || choice2 == 'Y')
   printf("\t\tClient's contact number: %s\n",usr.phoneNumber);
   printf("\t\tMember since: %s\n",usr.date);
   printf("\t\t------------------------------------------- \n");
+}
+
+
 
 
 
