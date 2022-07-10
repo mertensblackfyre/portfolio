@@ -4,33 +4,32 @@
 #include <string.h>
 #include <conio.h>
 #include <time.h>
-#include <windows.h> 
+#include <windows.h>
 #include <assert.h>
-
+#include <conio.h>
 
 struct member
 {
- char name[50];
- char id[50];
- char phoneNumber[50];
- char date[50];
+  char name[50];
+  char id[50];
+  char phoneNumber[50];
+  char date[50];
 };
 
-void setTime() 
+void setTime()
 {
-    time_t t = time(NULL);
-    struct tm *tm = localtime(&t);
-    printf("\t\t%s\n\n", asctime(tm));
+  time_t t = time(NULL);
+  struct tm *tm = localtime(&t);
+  printf("\t\t%s\n\n", asctime(tm));
 }
-
 
 void takeInput(char str[50])
 {
-  fgets(str,50,stdin);
+  fgets(str, 50, stdin);
   str[strlen(str) - 0];
 }
 
-void addMember(FILE *fp) 
+void addMember(FILE *fp)
 {
   char choice;
   int taken = 0;
@@ -39,53 +38,29 @@ void addMember(FILE *fp)
   time_t t = time(NULL);
   struct tm *tm = localtime(&t);
 
-  fp = fopen("Members.dat","ab");
+  fp = fopen("Members.dat", "ab+");
 
   printf("\t\tAdd the client's new id: ");
   takeInput(member.id);
-  fclose(fp);
-  
 
-
- fp = fopen("Members.dat","rb");
-while (fread(&usr,sizeof(struct member),1,fp))
-{
-if (!strcmp(member.id,usr.id))
-{
-    printf("\t\tId taken by a different is member,use a different ID.\n\n");
-    taken = 1;
-};
-  fclose(fp);
-}
-
-if (!taken && fwrite != 0 )
-{
-  fp = fopen("Members.dat","ab");
   printf("\t\tAdd the client's name: ");
   takeInput(member.name);
   printf("\t\tAdd the client's phone number: ");
   takeInput(member.phoneNumber);
-  printf("\t\tData issued: %s",asctime(tm));
-  strcpy(member.date,asctime(tm));
-  
-  fwrite(&member,sizeof(struct member),1,fp);
-  printf("\t\tSuccess %s has been registerd\n",member.name);
-}
-else
-{
-  printf("\t\tSomething went wrong, Try again later.\n");
-  fclose(fp);
-}
+  printf("\t\tData issued: %s", asctime(tm));
+  strcpy(member.date, asctime(tm));
+  fwrite(&member, sizeof(struct member), 1, fp);
+  printf("\t\tSuccess %s has been registerd\n", member.name);
 
- printf("\t\tDo you want go back to main menu?(Y/N): ");
- scanf("%c",&choice);
-  
+  printf("\t\tDo you want go back to main menu?(Y/N): ");
+  scanf("%c", &choice);
+
   if (choice == 'y' || choice == 'Y')
   {
     main();
   }
-  
-   fclose(fp);
+
+  fclose(fp);
 }
 
 void deleteMember(FILE *fp)
@@ -98,63 +73,64 @@ void deleteMember(FILE *fp)
 
   printf("\t\tEnter an ID:\n\t\t");
   takeInput(id);
-  fp = fopen("Members.dat","rb");
-  fp_tmp=fopen("tmp.bin", "wb");
+  fp = fopen("Members.dat", "rb");
+  fp_tmp = fopen("tmp.bin", "wb");
 
-while (fread(&usr,sizeof(struct member),1,fp))
-{
+  while (fread(&usr, sizeof(struct member), 1, fp))
+  {
 
-if (!strcmp(usr.id,id)) 
-{
-  memberFound = 1;
-  printf("\t\t----------------------------------------- \n");
-  printf("\t\tMember have been found\n\n");
-  printf("\t\tClient's ID: %s\n",usr.id);
-  printf("\t\tClient's name: %s\n",usr.name);
-  printf("\t\tClient's contact number: %s\n",usr.phoneNumber);
-  printf("\t\tMember since: %s\n\n\n",usr.date);
-  printf("\t\tRecord have been deleted");
-} 
+    if (!strcmp(usr.id, id))
+    {
+      memberFound = 1;
+      printf("\t\t----------------------------------------- \n");
+      printf("\t\tMember have been found\n\n");
+      printf("\t\tClient's ID: %s\n", usr.id);
+      printf("\t\tClient's name: %s\n", usr.name);
+      printf("\t\tClient's contact number: %s\n", usr.phoneNumber);
+      printf("\t\tMember since: %s\n\n\n", usr.date);
+      printf("\t\tRecord have been deleted");
+    }
 
-else fwrite(&usr, sizeof(struct member), 1, fp_tmp);   
-}
+    else
+      fwrite(&usr, sizeof(struct member), 1, fp_tmp);
+  }
 
-if (!memberFound) printf("\t\tMember not Found\n");
+  if (!memberFound)
+    printf("\t\tMember not Found\n");
 
   fclose(fp);
   fclose(fp_tmp);
-	remove("Members.dat");
-	rename("tmp.bin", "Members.dat");   
+  remove("Members.dat");
+  rename("tmp.bin", "Members.dat");
 }
 
-void viewMembers(FILE *fp) 
+void viewMembers(FILE *fp)
 {
   struct member client;
   char choice;
   int memberFound = 0;
-  fp = fopen("Members.dat","rb");
+  fp = fopen("Members.dat", "rb");
 
-  while (fread(&client,sizeof(struct member),1,fp))
+  while (fread(&client, sizeof(struct member), 1, fp))
   {
-  memberFound = 1;
-  printf("\t\t----------------------------------------- \n");
-  printf("\t\tClient's ID:\t%s\n",client.id);
-  printf("\t\tClient's name:\t%s\n",client.name);
-  printf("\t\tClient's phone number:\t%s\n",client.phoneNumber);
-  printf("\t\tMember since:\t%s\n",client.date);
+    memberFound = 1;
+    printf("\t\t----------------------------------------- \n");
+    printf("\t\tClient's ID:\t%s\n", client.id);
+    printf("\t\tClient's name:\t%s\n", client.name);
+    printf("\t\tClient's phone number:\t%s\n", client.phoneNumber);
+    printf("\t\tMember since:\t%s\n", client.date);
   }
 
-   if (!memberFound )
-   {
-     printf("\t\tNo members are found. Please add a member.\n");
-   }
-   
-  fclose(fp);
-   
-   printf("\t\tDo you want go back to main menu?(Y/N): ");
-   scanf("%c",&choice);
+  if (!memberFound)
+  {
+    printf("\t\tNo members are found. Please add a member.\n");
+  }
 
-     
+  fclose(fp);
+
+  printf("\t\tDo you want go back to main menu?(Y/N): ");
+  scanf("%c", &choice);
+
   if (choice == 'y' || choice == 'Y')
   {
     main();
@@ -170,32 +146,31 @@ void searchMember(FILE *fp)
 
   printf("\t\tEnter an ID:\n\t\t");
   takeInput(id);
-  fp = fopen("Members.dat","rb");
-while (fread(&usr,sizeof(struct member),1,fp))
-{
-if (!strcmp(usr.id,id))
-{
-  memberFound = 1;
-  printf("\t\t----------------------------------------- \n");
-  printf("\t\tMember Found\n\n");
-  printf("\t\tClient's ID:%s\n",usr.id);
-  printf("\t\tClient's name:\t%s\n",usr.name);
-  printf("\t\tClient's phone number:\t%s\n",usr.phoneNumber);
-  printf("\t\tMember since:\t%s\n",usr.date);
-}
-}
-if(!memberFound) printf("\t\tMember not Found\n"); 
+  fp = fopen("Members.dat", "rb");
+  while (fread(&usr, sizeof(struct member), 1, fp))
+  {
+    if (!strcmp(usr.id, id))
+    {
+      memberFound = 1;
+      printf("\t\t----------------------------------------- \n");
+      printf("\t\tMember Found\n\n");
+      printf("\t\tClient's ID:%s\n", usr.id);
+      printf("\t\tClient's name:\t%s\n", usr.name);
+      printf("\t\tClient's phone number:\t%s\n", usr.phoneNumber);
+      printf("\t\tMember since:\t%s\n", usr.date);
+    }
+  }
+  if (!memberFound)
+    printf("\t\tMember not Found\n");
 
   fclose(fp);
   printf("\t\tDo you want go back to main menu?(Y/N): ");
-  scanf("%c",&choice);
+  scanf("%c", &choice);
 
-     
   if (choice == 'y' || choice == 'Y')
   {
     main();
   }
-
 }
 
 void updateMember(FILE *fp)
@@ -209,78 +184,74 @@ void updateMember(FILE *fp)
 
   printf("\t\tEnter an ID: ");
   takeInput(id);
-  fp = fopen("Members.dat","rb");
+  fp = fopen("Members.dat", "rb");
   fp_tmp = fopen("tmp.bin", "wb");
 
-while (fread(&usr,sizeof(struct member),1,fp))
-{
-if (!strcmp(usr.id,id)) memberFound = 1;
+  while (fread(&usr, sizeof(struct member), 1, fp))
+  {
+    if (!strcmp(usr.id, id))
+      memberFound = 1;
 
-else
-{
-  fwrite(&usr, sizeof(struct member), 1, fp_tmp);
-}
-}
+    else
+    {
+      fwrite(&usr, sizeof(struct member), 1, fp_tmp);
+    }
+  }
   fclose(fp_tmp);
-if (memberFound)
-{
-  strcpy(usr.id,id);
-  printf("\t\tMember found\n");
-  printf("\t\tDo you want to update the member's record?(Y/N) ");
-  scanf("%c",&choice2);
-  fgetc(stdin);
-}
+  if (memberFound)
+  {
+    strcpy(usr.id, id);
+    printf("\t\tMember found\n");
+    printf("\t\tDo you want to update the member's record?(Y/N) ");
+    scanf("%c", &choice2);
+    fgetc(stdin);
+  }
 
-if (choice2 == 'y' || choice2 == 'Y')
-{
-  printf("\t\t---------------- Old Record --------------- \n");
-  printf("\t\tClient's id: %s\n",usr.id);
-  printf("\t\tClient's name: %s\n",usr.name);
-  printf("\t\tClient's contact number: %s\n",usr.phoneNumber);
-  printf("\t\t------------------------------------------- \n");
+  if (choice2 == 'y' || choice2 == 'Y')
+  {
+    printf("\t\t---------------- Old Record --------------- \n");
+    printf("\t\tClient's id: %s\n", usr.id);
+    printf("\t\tClient's name: %s\n", usr.name);
+    printf("\t\tClient's contact number: %s\n", usr.phoneNumber);
+    printf("\t\t------------------------------------------- \n");
 
-  printf("\t\tNew client's name: ");
-  takeInput(usr.name);
-  printf("\n\t\tNew client's phone number: ");
-  takeInput(usr.phoneNumber);
-  fp_tmp = fopen("tmp.bin", "ab+");
-  fwrite(&usr,sizeof(struct member),1, fp_tmp);
+    printf("\t\tNew client's name: ");
+    takeInput(usr.name);
+    printf("\n\t\tNew client's phone number: ");
+    takeInput(usr.phoneNumber);
+    fp_tmp = fopen("tmp.bin", "ab+");
+    fwrite(&usr, sizeof(struct member), 1, fp_tmp);
 
-  printf("\t\t---------------- New Record --------------- \n\n");
-  printf("\t\tClient's id: %s\n",usr.id);
-  printf("\t\tClient's name: %s\n",usr.name);
-  printf("\t\tClient's contact number: %s\n",usr.phoneNumber);
-  printf("\t\tMember since: %s\n",usr.date);
-  printf("\t\t------------------------------------------- \n");
-}
+    printf("\t\t---------------- New Record --------------- \n\n");
+    printf("\t\tClient's id: %s\n", usr.id);
+    printf("\t\tClient's name: %s\n", usr.name);
+    printf("\t\tClient's contact number: %s\n", usr.phoneNumber);
+    printf("\t\tMember since: %s\n", usr.date);
+    printf("\t\t------------------------------------------- \n");
+  }
 
-
-
-
-
-if (!memberFound) 
-  printf("\t\tMember not Found\n");
+  if (!memberFound)
+    printf("\t\tMember not Found\n");
 
   fclose(fp);
   fclose(fp_tmp);
-	remove("Members.dat");
-	rename("tmp.bin", "Members.dat");
+  remove("Members.dat");
+  rename("tmp.bin", "Members.dat");
 
   printf("\n\t\tDo you want go back to main menu?(Y/N): ");
-  scanf("%c",&choice);
-  
+  scanf("%c", &choice);
+
   if (choice == 'y' || choice == 'Y')
   {
     main();
   }
-  
 }
 
-int main() 
+int main()
 {
   system("cls");
   int choice;
-  FILE *fp; 
+  FILE *fp;
 
   printf("\t\t\t\tMain Menu\n");
   printf("\t\t\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\xdb\n\n");
@@ -293,43 +264,43 @@ int main()
   printf("\t\t<6>\tClose Application\n\n");
   printf("\t\tEnter your choice:");
 
-  scanf("%d",&choice);
+  scanf("%d", &choice);
   fgetc(stdin);
 
-switch (choice)
-{
+  switch (choice)
+  {
   case 1:
-  system("cls");
-  addMember(fp);
-  break;
+    system("cls");
+    addMember(fp);
+    break;
 
   case 2:
-  system("cls");
-  deleteMember(fp);
-  break;
+    system("cls");
+    deleteMember(fp);
+    break;
 
   case 3:
-  system("cls");
-  viewMembers(fp);
-  break;
-  
+    system("cls");
+    viewMembers(fp);
+    break;
+
   case 4:
-  system("cls");
-  searchMember(fp);
-  break;
+    system("cls");
+    searchMember(fp);
+    break;
 
   case 5:
-  system("cls");
-  updateMember(fp);
-  break;
+    system("cls");
+    updateMember(fp);
+    break;
 
   case 6:
-  exit(1);
-  break;
+    exit(1);
+    break;
 
   default:
-  printf("\n\t\tNOT A VALID CHOICE.");
-  break;
-}
- return 0;
+    printf("\n\t\tNOT A VALID CHOICE.");
+    break;
+  }
+  return 0;
 }
