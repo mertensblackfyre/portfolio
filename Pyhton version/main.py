@@ -60,25 +60,28 @@ def add_member():
 
 def delete_member():
     member_name = input("Please enter a member's name to be deleted: ")
-
+    members = []
     with open("Members.csv") as file, open("tmp.csv", "w") as tmp:
         try:
-            reader = csv.reader(file)
-            # writer  = csv.DictWriter(tmp,fieldnames=fields)
-            # writer.writeheader()
+            reader = csv.DictReader(file)
+            writer  = csv.DictWriter(tmp,fieldnames=fields)
+            writer.writeheader()
             for row in reader:
-                print(row)
-                # if member_name not in row:
-                #     writer.writerow(row)
+                members.append(row)
+                if member_name.lower() == row["name"].lower():
+                   members.remove(row)
+                   for news in members:
+                    writer.writerow(news)
+
         except ValueError:
             print("Member not found")
 
-    # file_name = "./Members.csv"
-    # if(os.path.exists(file_name) and os.path.isfile(file_name)):
-    #     os.remove(file_name)
-    #     print(f"{member_name} has been deleted.")
+    file_name = "./Members.csv"
+    if(os.path.exists(file_name) and os.path.isfile(file_name)):
+        os.remove(file_name)
+        print(f"{member_name} has been deleted.")
     
-    # os.rename("tmp.csv","Members.csv")
+    os.rename("tmp.csv","Members.csv")
 
 def view_members():
     with open("Members.csv","r") as file: 
@@ -96,22 +99,28 @@ def view_members():
 
 
 def search_member():
+    file_name = "./Members.csv"
     member_name = input("Please enter a member's name: ")
-    with open("Members.csv","r") as file: 
-        reader = csv.DictReader(file)
-        for row in reader:
-            if member_name == row["name"]:
-                id = row["id"]
-                name = row["name"]
-                phone = row["phone"]
-                date = row["date"]
-                print("----------------------------------------------------------------------")
-                print(f"ID: {id}")
-                print(f"Name: {name}")
-                print(f"Phone Number: {phone}")
-                print(f"Data issued: {date}\n")
-                print("Member Found")
-                
+    if(os.path.exists(file_name) and os.path.isfile(file_name)):
+        with open("Members.csv","r") as file: 
+            reader = csv.DictReader(file)
+            for row in reader:
+                if member_name.lower() == row["name"].lower():
+                    id = row["id"]
+                    name = row["name"]
+                    phone = row["phone"]
+                    date = row["date"]
+                    print("----------------------------------------------------------------------")
+                    print(f"ID: {id}")
+                    print(f"Name: {name}")
+                    print(f"Phone Number: {phone}")
+                    print(f"Data issued: {date}\n")
+                    print("Member Found")
+
+            print("Member not found")
+
+    else:
+        print("File does not exist")
 
 if __name__ == "__main__":
     main()
