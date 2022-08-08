@@ -44,10 +44,19 @@ def add_member():
     file_name = "./Members.csv"
 
     if(os.path.exists(file_name) and os.path.isfile(file_name)):
-        with open("Members.csv","a") as file:
-            writer = csv.DictWriter(file, fieldnames=fields)
-            writer.writerow(member)
-        print("True")
+            with open("Members.csv","r") as file:
+             reader = csv.DictReader(file)
+             for row in reader:
+                if row["name"] == name and row["phone"] == phone_number:
+                    print("Person already exists")
+                    file.close()
+                    sys.exit(1)
+            with open("Members.csv","a+") as file:
+                reader = csv.DictReader(file)
+                writer = csv.DictWriter(file, fieldnames=fields)
+                writer.writerow(member)
+                print(reader)
+            
     else:
         with open("Members.csv","w") as file:
             writer = csv.DictWriter(file, fieldnames=fields)
