@@ -10,7 +10,7 @@ def main():
     print("\t\t<1>\tAdd a Member\n\n")
     print("\t\t<2>\tRemove a Member\n\n")
     print("\t\t<3>\tView all Members\n\n")
-    print("\t\t<4>\tSearch Member by ID\n\n")
+    print("\t\t<4>\tSearch Member by name\n\n")
     print("\t\t<5>\tUpdate a Member\n\n")
     print("\t\t<6>\tClose Application\n\n")
 
@@ -24,11 +24,10 @@ def main():
         view_members()
     elif choice == 4:
         search_member()
-    # elif choice == 5:
-    #     update_member()
+    elif choice == 5:
+        update_member()
     else:
         sys.exit(1)
-
 
 def add_member():
     id  = uuid.uuid1()
@@ -59,6 +58,7 @@ def add_member():
 
 
 def delete_member():
+    found = 0
     member_name = input("Please enter a member's name to be deleted: ")
     members = []
     with open("Members.csv") as file, open("tmp.csv", "w") as tmp:
@@ -69,18 +69,35 @@ def delete_member():
             for row in reader:
                 members.append(row)
                 if member_name.lower() == row["name"].lower():
-                   members.remove(row)
-                   for news in members:
-                    writer.writerow(news)
+                    id = row["id"]
+                    name = row["name"]
+                    phone = row["phone"]
+                    date = row["date"]
+                    print(f"ID: {id}")
+                    print(f"Name: {name}")
+                    print(f"Phone Number: {phone}")
+                    print(f"Data issued: {date}\n")
+                    choice = input(f"Are you sure you want to delete {member_name}?: ").lower()
+                    found = 1
+                    if choice in ["yes","y"]:
+                        members.remove(row)
+                    else:
+                        sys.exit(1)
+            for news in members:
+                writer.writerow(news)
 
         except ValueError:
             print("Member not found")
 
+    if found == 1:
+        print(f"{member_name} has been deleted.")
+    else:
+        print("Person has not been found")
+
     file_name = "./Members.csv"
     if(os.path.exists(file_name) and os.path.isfile(file_name)):
         os.remove(file_name)
-        print(f"{member_name} has been deleted.")
-    
+
     os.rename("tmp.csv","Members.csv")
 
 def view_members():
@@ -99,6 +116,7 @@ def view_members():
 
 
 def search_member():
+    found = 0
     file_name = "./Members.csv"
     member_name = input("Please enter a member's name: ")
     if(os.path.exists(file_name) and os.path.isfile(file_name)):
@@ -106,6 +124,7 @@ def search_member():
             reader = csv.DictReader(file)
             for row in reader:
                 if member_name.lower() == row["name"].lower():
+                    found = 1
                     id = row["id"]
                     name = row["name"]
                     phone = row["phone"]
@@ -115,12 +134,57 @@ def search_member():
                     print(f"Name: {name}")
                     print(f"Phone Number: {phone}")
                     print(f"Data issued: {date}\n")
-                    print("Member Found")
-
-            print("Member not found")
-
+        
+        if found == 1:
+             print("Member Found")
+        else:
+            print("Member not found") 
     else:
         print("File does not exist")
+
+
+def update_member():
+    found = 0
+    member_name = input("Please enter the person you want to update: ")
+    with open("Members.csv") as file, open("tmp.csv", "w") as tmp:
+            reader = csv.DictReader(file)
+            writer  = csv.DictWriter(tmp,fieldnames=fields)
+            writer.writeheader()
+            new_name = input("Update name: ")
+            new_phone = input("Update phone number : ")
+            for row in reader:
+                if member_name.lower() == row["name"].lower():
+                    found = 1
+                    id = row["id"]
+                    name = row["name"]
+                    phone = row["phone"]
+                    date = row["date"]
+                    print("------------------------------ OLD RECORD -------------------------------")
+                    print(f"ID: {id}")
+                    print(f"Name: {name}")
+                    print(f"Phone Number: {phone}")
+                    print(f"Data issued: {date}\n")
+                    row.update([("name",new_name),("phone", new_phone )])
+                    print("Member have been updated")
+                    id = row["id"]
+                    name = row["name"]
+                    phone = row["phone"]
+                    date = row["date"]
+                    print("------------------------------ NEW RECORD -------------------------------")
+                    print(f"ID: {id}")
+                    print(f"Name: {name}")
+                    print(f"Phone Number: {phone}")
+                    print(f"Data issued: {date}\n")
+                writer.writerow(row)    
+                        
+    if found == 0:
+        print("Member not found")
+    
+    file_name = "./Members.csv"
+    if(os.path.exists(file_name) and os.path.isfile(file_name)):
+        os.remove(file_name)
+
+    os.rename("tmp.csv","Members.csv")
 
 if __name__ == "__main__":
     main()
