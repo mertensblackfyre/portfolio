@@ -1,12 +1,18 @@
 package main
 
 import (
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	view "github.com/porfolio/packages/view"
 	"net/http"
-	"github.com/a-h/templ"
 )
 
 func main() {
-
-	http.Handle("/", templ.Handler(hello()))
-	http.ListenAndServe(":8080", nil)
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		component := view.Home()
+		component.Render(r.Context(), w)
+	})
+	http.ListenAndServe(":3000", r)
 }
