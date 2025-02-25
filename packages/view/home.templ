@@ -24,6 +24,14 @@ templ Home() {
             color: rgb(210, 210, 223);
             user-select: none;
         }
+
+        .larger-image {
+display: block; 					
+margin: 0 auto; 
+    width: 250px; 
+    height: auto;
+    max-width: 100%;
+}
         .social,
         .name,
         span{
@@ -46,26 +54,27 @@ templ Home() {
     </style>
 		</head>
 		<body>
+<img src="../../assets/frieren.gif" alt="frieren" class="larger-image">
 			<main>
 				<h2 class="name">mertens</h2>
 				<hr/>
 				<nav class="nav">
 					<a href="/">home </a>
-					<a href="/blogs">blogs </a>
+					<a href="/posts">posts</a>
 				</nav>
 				<p></p>
 				<p>Learning ML, CS & Low-Level</p>
 				<h3><span>#</span> working on:</h3>
 				<ul>
-					<li>simple shell using C</li>
-					<li>3D renderer using C++ (not started yet)</li>
+					<li>a shell using C</li>
+					<li>2D game in C</li>
 				</ul>
 				<h3><span>#</span> posts:</h3>
-			//	<ul>
-			//		<li>
-					//	<a href="./posts/compilers.html">Why am I using NixOS as my daily driver</a>
-			//		</li>
-			//	</ul>
+				//	<ul>
+				//		<li>
+				//	<a href="./posts/compilers.html">Why am I using NixOS as my daily driver</a>
+				//		</li>
+				//	</ul>
 				<br/>
 				<nav>
 					<a class="social" href="https://x.com/_blackfyre__">[twitter]</a>
